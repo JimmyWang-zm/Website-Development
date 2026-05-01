@@ -380,6 +380,98 @@
     </div>
   </section>
 
+  <!-- ====== GLOBAL CLIENT MAP ====== -->
+  <section class="section">
+    <div class="container">
+      <div class="section__header fade-in">
+        <h2>全球客户分布</h2>
+        <p class="section__subtitle">我们的合作伙伴遍及中国、日本、美国、欧洲等地区，为全球客户提供精密电机驱动解决方案</p>
+      </div>
+
+      <!-- Map Stats -->
+      <div class="grid grid-4 gap-6 stagger-children" style="margin-bottom:var(--space-10);">
+        <div style="text-align:center;padding:var(--space-6);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);">
+          <div style="font-size:2rem;font-weight:800;color:var(--color-primary-light);">5+</div>
+          <div style="font-size:var(--fs-sm);color:var(--color-text-muted);">覆盖大洲</div>
+        </div>
+        <div style="text-align:center;padding:var(--space-6);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);">
+          <div style="font-size:2rem;font-weight:800;color:var(--color-primary-light);">10+</div>
+          <div style="font-size:var(--fs-sm);color:var(--color-text-muted);">覆盖国家与地区</div>
+        </div>
+        <div style="text-align:center;padding:var(--space-6);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);">
+          <div style="font-size:2rem;font-weight:800;color:var(--color-primary-light);">30+</div>
+          <div style="font-size:var(--fs-sm);color:var(--color-text-muted);">品牌合作客户</div>
+        </div>
+        <div style="text-align:center;padding:var(--space-6);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);">
+          <div style="font-size:2rem;font-weight:800;color:var(--color-primary-light);">2025</div>
+          <div style="font-size:var(--fs-sm);color:var(--color-text-muted);">台湾分公司成立</div>
+        </div>
+      </div>
+
+      <!-- Leaflet Map -->
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+      <div id="client-map" style="width:100%;height:500px;border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--color-border);box-shadow:var(--shadow-lg);"></div>
+      <p style="text-align:center;color:var(--color-text-muted);font-size:var(--fs-xs);margin-top:var(--space-3);">
+        🔴 红色标记为合作客户所在地 ⭐ 黄色标记为鑫惠展总部（东莞）及台湾分公司
+      </p>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WPbM=" crossorigin=""></script>
+      <script>
+      (function(){
+        var map = L.map('client-map', { zoomControl: true, scrollWheelZoom: false }).setView([30, 100], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 10,
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        // Icon factories
+        var redIcon = L.divIcon({
+          className: '',
+          html: '<div style="width:14px;height:14px;background:#e53e3e;border:2.5px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(229,62,62,.6);"></div>',
+          iconSize: [14, 14], iconAnchor: [7, 7]
+        });
+        var starIcon = L.divIcon({
+          className: '',
+          html: '<div style="width:18px;height:18px;background:#d4a017;border:2.5px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(212,160,23,.8);display:flex;align-items:center;justify-content:center;font-size:10px;">★</div>',
+          iconSize: [18, 18], iconAnchor: [9, 9]
+        });
+
+        // KWC offices (star)
+        var offices = [
+          { lat: 23.044, lng: 113.735, name: '鑫惠展机电（总部）', desc: '广东省东莞市谢岗镇' },
+          { lat: 25.033, lng: 121.565, name: 'KWC Taiwan（台湾分公司）', desc: '台湾（2025年成立）' }
+        ];
+        offices.forEach(function(p){
+          L.marker([p.lat, p.lng], {icon: starIcon}).addTo(map)
+            .bindPopup('<strong>' + p.name + '</strong><br>' + p.desc);
+        });
+
+        // Clients (red dots)
+        var clients = [
+          { lat: 34.738, lng: 135.597, name: 'Panasonic（松下电器）', desc: '大阪府，日本' },
+          { lat: 35.681, lng: 139.767, name: 'HITACHI（日立）', desc: '东京，日本' },
+          { lat: 38.268, lng: 140.869, name: 'Iris Ohyama（爱丽思）', desc: '仙台市，日本' },
+          { lat: 36.322, lng: 139.004, name: 'Yamada Appliance（ヤマダ電機）', desc: '高崎市，群马，日本' },
+          { lat: 48.135, lng: 11.582, name: 'BMW', desc: '慕尼黑，德国' },
+          { lat: 48.857, lng: 2.352,  name: 'Novares', desc: '巴黎，法国' },
+          { lat: 42.116, lng: -86.455, name: 'Whirlpool（惠而浦）', desc: '密歇根州，美国' },
+          { lat: 36.373, lng: -94.209, name: 'Walmart（沃尔玛）', desc: '阿肯色州，美国' },
+          { lat: 41.737, lng: -111.834, name: 'Handi Quilter', desc: '犹他州，美国' },
+          { lat: 23.022, lng: 113.122, name: '美的（Midea）', desc: '佛山，广东，中国' },
+          { lat: 22.834, lng: 113.246, name: '小熊电器', desc: '顺德，广东，中国' },
+          { lat: 31.230, lng: 121.474, name: '上海通用汽车', desc: '上海，中国' },
+          { lat: 36.675, lng: 117.001, name: '九阳（Joyoung）', desc: '济南，山东，中国' },
+          { lat: 26.598, lng: 106.708, name: '贵州华烽', desc: '贵阳，贵州，中国' },
+          { lat: 24.326, lng: 109.423, name: '柳州松芝', desc: '柳州，广西，中国' }
+        ];
+        clients.forEach(function(p){
+          L.marker([p.lat, p.lng], {icon: redIcon}).addTo(map)
+            .bindPopup('<strong>' + p.name + '</strong><br><span style="color:#666;font-size:12px;">' + p.desc + '</span>');
+        });
+      })();
+      </script>
+    </div>
+  </section>
+
   <!-- ====== NEWS PREVIEW ====== -->
   <section class="section">
     <div class="container">
